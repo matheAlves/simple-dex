@@ -46,7 +46,7 @@ export default function Search({ navigation }) {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
-        onPress={() => navigation.navigate("Details", { pokemon: item, types: ['fire', 'grass'] })}
+        onPress={() => navigation.navigate("Details", { pokemon: item })}
       >
         <Image source={{ uri: pokemonImageUri }} style={styles.itemImage} />
         <Text style={styles.itemText}>{item.name}</Text>
