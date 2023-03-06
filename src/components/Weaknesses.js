@@ -1,5 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
+import TypeCard from "./TypeCard";
 
 export default function Weaknesses({ type1, type2 }) {
   const [weaknesses, setWeaknesses] = useState({});
@@ -146,40 +147,30 @@ export default function Weaknesses({ type1, type2 }) {
     },
   };
 
-  const effs = {
-    4: "4x",
-    2: "2x",
-    0.5: "1/2x",
-    0.25: "1/4x",
-    0: "0x",
-  };
-
   useEffect(() => {
     const weaknessesObj = createWknsObj();
-
     const grouped = groupByEff(weaknessesObj);
-
     setWeaknesses(grouped);
-
-    console.log(weaknesses)
   }, []);
 
   function createWknsObj() {
-    let result = {};
-
-    const type1Weaknesses = Object.keys(typeChart[type1]);
-
     if (type2) {
+      let result = {};
+
+      const type1Weaknesses = Object.keys(typeChart[type1]);
       const type2Weaknesses = Object.keys(typeChart[type2]);
+
       const wknsIntersection = type1Weaknesses.filter((value) =>
         type2Weaknesses.includes(value)
       );
+
       const type1Rest = type1Weaknesses.filter(
         (value) => !wknsIntersection.includes(value)
       );
       const type2Rest = type2Weaknesses.filter(
         (value) => !wknsIntersection.includes(value)
       );
+
       wknsIntersection.forEach((t) => {
         const eff = typeChart[type1][t] * typeChart[type2][t];
         if (eff !== 1) {
@@ -192,13 +183,10 @@ export default function Weaknesses({ type1, type2 }) {
       type2Rest.forEach((t) => {
         Object.assign(result, { [t]: typeChart[type2][t] });
       });
+      return result;
     } else {
-      type1Weaknesses.forEach((t) => {
-        Object.assign(result, { [t]: typeChart[type1][t] });
-      });
+      return typeChart[type1];
     }
-      
-    return result;
   }
 
   function groupByEff(obj) {
@@ -211,37 +199,77 @@ export default function Weaknesses({ type1, type2 }) {
         grouped[value].push(key);
       }
     }
-
     return grouped;
   }
 
   function weaknessesView() {
     return (
-      <View>
-        {Object.keys(weaknesses).sort().reverse().map((k, i) => {
-          return (
-            <View key={k}>
-              <Text style={styles.weaknessesContainer}>
-                {effs[k]}: {
-                 weaknesses[k].map(t => <Text>{`${t} `}</Text>)
-               }
-              </Text>
-            </View>
-          );
-        })}
+      <View style={styles.container}>
+        <Text style={styles.title}>Damage Taken</Text>
+        {Object.keys(weaknesses)
+          .sort()
+          .reverse()
+          .map((eff) => {
+            return (
+              <View style={styles.wknsContainer} key={eff}>
+                <View style={styles.multiplierBubble}>
+                  <Text style={styles.text}>{eff}x </Text>
+                </View>
+                <View style={styles.typesCardsContainer}>
+                  {weaknesses[eff].map((t) => (
+                    <TypeCard type={t} />
+                  ))}
+                </View>
+              </View>
+            );
+          })}
       </View>
     );
   }
 
   return (
-    <View>{Object.keys(weaknesses).length ? weaknessesView() : <Text> Loading </Text>}</View>
+    <View>
+      {Object.keys(weaknesses).length ? (
+        weaknessesView()
+      ) : (
+        <Text> Loading </Text>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  weaknessesContainer: {
-    fontSize: 24,
+  container: {
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  title: {
+    fontSize: 29,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  wknsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+  },
+  multiplierBubble: {
+    backgroundColor: "#999999",
+    width: 50,
+    justifyContent: "center",
+    borderRadius: 50,
+    height: 50,
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: 16,
     fontWeight: "bold",
     textTransform: "capitalize",
+    textAlign: "center",
+    color: "white",
+  },
+  typesCardsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
   },
 });

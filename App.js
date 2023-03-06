@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ animation: "fade" }}>
+      <Stack.Navigator>
         <Stack.Screen name="Search" component={Search} />
         <Stack.Screen name="Details" component={Details} />
       </Stack.Navigator>
