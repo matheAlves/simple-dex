@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
 import TypeCard from "./TypeCard";
 
@@ -89,6 +89,7 @@ export default function Weaknesses({ type1, type2 }) {
     },
     water: {
       water: 2,
+      grass: 2,
       electric: 2,
       steel: 0.5,
       fire: 0.5,
@@ -206,23 +207,29 @@ export default function Weaknesses({ type1, type2 }) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Damage Taken</Text>
+        <View style={styles.wknsContainer}>
         {Object.keys(weaknesses)
           .sort()
           .reverse()
-          .map((eff) => {
+          .map((eff, i) => {
             return (
-              <View style={styles.wknsContainer} key={eff}>
-                <View style={styles.multiplierBubble}>
+              <TouchableOpacity style={styles.wknsRow} key={eff}>
+                <View style={[styles.multiplierBubble, { backgroundColor: eff >= 2 ? '#3FBF3F' : '#999999' }]}>
                   <Text style={styles.text}>{eff}x </Text>
                 </View>
-                <View style={styles.typesCardsContainer}>
+                <View style={
+                  ( i === Object.keys(weaknesses).length - 1)
+                  ? styles.typesCardsContainerNB
+                  : styles.typesCardsContainer
+                }>
                   {weaknesses[eff].map((t) => (
                     <TypeCard type={t} />
                   ))}
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           })}
+        </View>
       </View>
     );
   }
@@ -240,36 +247,55 @@ export default function Weaknesses({ type1, type2 }) {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "space-between",
-    padding: 10,
+    justifyContent: "space-around",
+    width: '95%',
+    // flex: 0.1
   },
   title: {
-    fontSize: 29,
+    fontSize: 35,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-  wknsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "center",
-  },
-  multiplierBubble: {
-    backgroundColor: "#999999",
-    width: 50,
-    justifyContent: "center",
-    borderRadius: 50,
-    height: 50,
     marginBottom: 5,
   },
+  wknsContainer: {
+    backgroundColor: "white",
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  wknsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    
+    borderRadius: 10,
+    width: '89%'
+
+  },
+  multiplierBubble: {
+    width: 45,
+    height: 45,
+    justifyContent: "center",
+    borderRadius: 10,
+    marginRight: 10,
+  },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     textTransform: "capitalize",
     textAlign: "center",
     color: "white",
   },
-  typesCardsContainer: {
+  typesCardsContainer: {    
+    flexDirection: "row",
+    borderBottomWidth: 0.9,
+    borderBottomColor: "#E9E9E9",
+    alignItems: "center",
+    flexWrap: "wrap",
+    width: '96%'
+  },
+  typesCardsContainerNB: {    
     flexDirection: "row",
     flexWrap: "wrap",
+    alignItems: "center",
+    width: '98%'
   },
 });

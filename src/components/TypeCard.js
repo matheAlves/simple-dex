@@ -10,9 +10,9 @@ export default function TypeCard({ type }) {
     grass: "#78C850",
     ice: "#98D8D8",
     fighting: "#C03028",
-    poison: "#A040A0",
+    poison: "#B97FC9",
     ground: "#E0C068",
-    flying: "#A890F0",
+    flying: "#6F96CC",
     psychic: "#F85888",
     bug: "#A8B820",
     rock: "#B8A038",
@@ -35,10 +35,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 1.5,
+    marginBottom: 10,
+    alignSelf: "center"
   },
   cardText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "capitalize"
