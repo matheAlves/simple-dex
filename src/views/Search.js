@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { SearchBar } from "@rneui/themed";
 import { useFonts } from "expo-font";
+import Loading from "../components/Loading";
 
 const CONTAINER_HEIGHT = 60;
 
@@ -153,9 +154,7 @@ export default function Search({ navigation }) {
 
   if (isLoading || !loaded) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
-      </View>
+      <Loading />
     );
   }
 

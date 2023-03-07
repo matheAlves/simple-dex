@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -9,15 +9,19 @@ import {
   Button,
   Switch,
   Modal,
+  Pressable,
 } from "react-native";
 import Weaknesses from "../components/Weaknesses";
 import TypeCard from "../components/TypeCard";
+import Loading from "../components/Loading";
+import Evilicons from "@expo/vector-icons/EvilIcons";
 
 export default function Details({ navigation, route }) {
   const { pokemon } = route.params;
   const [types, setTypes] = useState([]);
   const [flavorText, setFlavorText] = useState(null);
   const [shiny, setShiny] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const POKE_SPRITE_BASE_URL = shiny
     ? "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/"
@@ -40,8 +44,18 @@ export default function Details({ navigation, route }) {
     fetch(`${POKE_SPECIES_INFO_URL}${pokemon.name}`)
       .then((response) => response.json())
       .then((data) => {
-        const flavorText = data.flavor_text_entries[0].flavor_text;
-        setFlavorText(flavorText);
+        const text = data.flavor_text_entries[0].flavor_text
+          .split("\f")
+          .map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              {index !== data.flavor_text_entries[0].flavor_text.length - 1
+                ? "\n"
+                : ""}
+            </React.Fragment>
+          ));
+
+        setFlavorText(text);
       })
       .catch((error) => console.log(error));
 
@@ -53,12 +67,7 @@ export default function Details({ navigation, route }) {
       title,
       headerRight: () => (
         <Button
-          onPress={() => {
-            setShiny((prev) => {
-              // alert(`Set to ${prev ? "normal" : "shiny"}`);
-              return !prev;
-            });
-          }}
+          onPress={() => setModalVisible((prev) => setModalVisible(!prev))}
           title="Info"
         />
       ),
@@ -68,17 +77,30 @@ export default function Details({ navigation, route }) {
   const toggleSwitch = () => setShiny((prev) => !prev);
 
   if (!types.length || !flavorText) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading...</Text>
-      </View>
-    );
+    return <Loading />;
   }
 
   return (
     <View style={styles.detailsContainer}>
-      <ScrollView 
-      showsVerticalScrollIndicator={false}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Pressable
+              style={styles.buttonClose}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Evilicons name="close-o" size={32} />
+            </Pressable>
+            <Text style={styles.modalText}>{flavorText}</Text>
+          </View>
+        </View>
+      </Modal>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.innerView}>
           <Weaknesses type1={types[0]} type2={types[1]} />
           <Image
@@ -107,7 +129,7 @@ export default function Details({ navigation, route }) {
 const styles = StyleSheet.create({
   detailsContainer: {
     alignItems: "center",
-    width: '100%'
+    width: "100%",
   },
   detailsImagePad: {
     width: 550,
@@ -117,7 +139,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 5 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    flex: 0.5
+    flex: 0.5,
   },
   detailsImageIos: {
     width: 300,
@@ -166,5 +188,39 @@ const styles = StyleSheet.create({
     width: "95%",
     alignItems: "center",
     justifyContent: "space-evenly",
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 10,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 25,
+    paddingBottom: 5,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: "50%",
+  },
+  modalText: {
+    fontSize: 18,
+    width: "100%",
+    textAlign: "center",
+  },
+  buttonClose: {
+    padding: 5,
+    position: "absolute",
+    right: 0,
   },
 });
