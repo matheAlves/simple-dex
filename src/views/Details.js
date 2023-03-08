@@ -94,7 +94,7 @@ export default function Details({ navigation, route }) {
               style={styles.buttonClose}
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Evilicons name="close-o" size={32} />
+              <Evilicons name="close-o" size={30} />
             </Pressable>
             <Text style={styles.modalText}>{flavorText}</Text>
           </View>
@@ -198,10 +198,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 10,
-    backgroundColor: "white",
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: 20,
     padding: 25,
-    paddingBottom: 5,
+    paddingBottom: 8,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   modalText: {
-    fontSize: 18,
+    fontSize: 16,
     width: "100%",
     textAlign: "center",
   },

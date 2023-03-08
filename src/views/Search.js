@@ -245,8 +245,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: CONTAINER_HEIGHT,
-    backgroundColor: "#f3f2f9",
+    backgroundColor: "rgba(243, 242, 249, 0.7)",
   },
+
   searchInput: {
     height: 15,
     backgroundColor: "#e3e3e8",
