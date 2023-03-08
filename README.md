@@ -1,7 +1,7 @@
 # weakdex
 a simple pokedéx for viewing pokémon weaknesses and resistances
 
-<img src="./assets/screen1.jpeg"  width="281.11" height="500"> <img src="./assets/screen2.jpeg"  width="281.11" height="500">
+<img src="./assets/screen1.jpeg"  width="281.11" height="500"> <img src="./assets/screen3.jpeg"  width="281.11" height="500">
 
 # running locally
 npm install
