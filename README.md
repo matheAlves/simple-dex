@@ -8,7 +8,7 @@ npm install
 
 npx expo start
 
-# credits
+# reference
 [Collapsing Header and bottom tab Animation](https://www.youtube.com/watch?v=nayqNApYp-I)
 
 [React Native: Rotate Image View Using Animation](https://www.youtube.com/watch?v=yKUQGzC8iHM)
